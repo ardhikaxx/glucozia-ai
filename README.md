@@ -17,7 +17,7 @@
 ## 🔧 Instalasi dan Konfigurasi
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/username/glucozia-ai.git
+git clone https://github.com/ardhikaxx/glucozia-ai.git
 cd glucozia-ai
 ```
 
