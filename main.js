@@ -47,7 +47,7 @@ form.onsubmit = async (ev) => {
     prompt.includes('siapa yang mengembangkan kamu') || 
     prompt.includes('siapa developer kamu')
   ) {
-    const responseText = `Saya dibuat oleh tim Glucozia AI.`;
+    const responseText = `Saya dibuat oleh tim GlucoWise.`;
     const responseBubble = addChatBubble('', 'ai', true);
     typeResponse(responseBubble, responseText, null, 0,);
   } else if (prompt.includes('siapa kamu') || prompt.includes('kamu siapa') || prompt.includes('siapa omeo')) {
