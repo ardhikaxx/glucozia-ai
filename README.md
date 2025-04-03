@@ -27,8 +27,8 @@ npm install
 ```
 
 ### 3. Konfigurasi API Key
-Buat file `.env` dan tambahkan API Key dari Gemini AI:
-```env
+Ganti API Key dari Gemini AI di file main.js:
+```main.js
 GEMINI_API_KEY=your_api_key_here
 ```
 
