@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="shortcut icon" href="./logo.png" type="image/x-icon">
+  <title>Gluco AI - Edukasi Diabetes</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="./style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Darumadrop+One&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+  <section class="flex items-center justify-center min-h-screen p-4">
+    <div class="w-full max-w-2xl flex flex-col">
+      <div class="text-center mb-4">
+        <h1 class=" font-bold text-gray-800 mb-1">
+          <span style="color: #1A998E;">Glucozia</span> AI
+        </h1>
+        <p class="text-gray-600 text-sm sm:text-base">Asisten Cerdas untuk Edukasi Diabetes</p>
+      </div>
+      
+      <div class="flex-1 rounded-lg p-2 overflow-hidden flex flex-col">
+        <div id="chat-output" class="flex-1 overflow-y-auto space-y-3 p-2 max-h-80"></div>
+      </div>
+      
+      <div class="bg-white rounded-lg shadow-lg p-3">
+        <form class="flex items-center gap-3" onsubmit="return handleSubmit(event)">
+          <div class="flex-1 flex items-center">
+            <textarea 
+              id="prompt" 
+              name="prompt" 
+              placeholder="Tanyakan sesuatu..." 
+              class="w-full h-[40px] p-2 border border-[#1A998E] rounded-lg focus:ring-2 focus:ring-[#1A998E] focus:ring-opacity-50 transition-all overflow-y-auto"
+              style="
+                min-height: 24px;
+                max-height: 40px;
+                resize: none;
+                scrollbar-width: thin;
+                scrollbar-color: #1A998E #f1f1f1;
+              "
+              rows="1"
+              required
+            ></textarea>
+          </div>
+          <button 
+            type="submit" 
+            class="bg-[#1A998E] text-white font-bold px-4 py-2 rounded-lg flex items-center hover:bg-[#137a72] transition-colors self-center"
+          >
+            Kirim
+            <i class="fa-regular fa-paper-plane fa-animation ml-1"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <script type="module" src="./main.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    const textarea = document.querySelector('textarea[name="prompt"]');
+    textarea.addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = this.scrollHeight + 'px';
+    });
+  </script>
+</body>
+</html>
