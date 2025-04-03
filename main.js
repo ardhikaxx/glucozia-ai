@@ -28,10 +28,10 @@ const chat = model.startChat({
 });
 
 const responses = [
-  "Saya adalah Omeo, asisten edukasi interaktif yang dirancang untuk membantu Anda belajar dan mengeksplorasi berbagai topik. Bagaimana saya bisa membantu Anda hari ini?",
-  "Omeo di sini! Saya siap membantu Anda dengan berbagai pertanyaan dan informasi yang Anda butuhkan.",
-  "Hai! Nama saya Omeo, dan saya di sini untuk memandu Anda melalui berbagai topik. Ada yang bisa saya bantu?",
-  "Selamat datang! Saya Omeo, asisten virtual Anda. Apakah Anda membutuhkan bantuan atau informasi tentang topik tertentu?"
+  "Saya adalah Glucozia AI, asisten edukasi interaktif yang dirancang untuk membantu Anda belajar dan mengeksplorasi topik-topik tentang diabetes. Bagaimana saya bisa membantu Anda hari ini?",
+  "Halo! Saya adalah Glucozia AI, asisten edukasi interaktif di sini! Saya siap membantu Anda dengan berbagai pertanyaan dan informasi yang Anda butuhkan.",
+  "Hai! Saya adalah Glucozia AI, dan saya di sini untuk memandu Anda melalui berbagai topik terkait diabetes. Ada yang bisa saya bantu?",
+  "Selamat datang! Saya adalah Glucozia AI, asisten virtual Anda. Apakah Anda membutuhkan bantuan atau informasi tentang topik diabetes?"
 ];
 
 form.onsubmit = async (ev) => {
@@ -47,7 +47,7 @@ form.onsubmit = async (ev) => {
     prompt.includes('siapa yang mengembangkan kamu') || 
     prompt.includes('siapa developer kamu')
   ) {
-    const responseText = `Saya dibuat dan dilatih oleh Yanuar Ardhika Rahmadhani Ubaidillah. Untuk lebih mengenal, Anda dapat mengunjungi website portofolionya di: <a href="https://yanuar-ardhika.vercel.app/" target="_blank" class="text-blue-500 underline">https://yanuar-ardhika.vercel.app/</a>.`;
+    const responseText = `Saya dibuat oleh tim Glucozia AI.`;
     const responseBubble = addChatBubble('', 'ai', true);
     typeResponse(responseBubble, responseText, null, 0,);
   } else if (prompt.includes('siapa kamu') || prompt.includes('kamu siapa') || prompt.includes('siapa omeo')) {
