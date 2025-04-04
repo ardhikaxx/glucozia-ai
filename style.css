@@ -112,6 +112,15 @@ h1 {
   animation-delay: 0.4s;
 }
 
+.prompt-cards {
+  display: none; /* Awalnya disembunyikan */
+  transition: all 0.3s ease;
+}
+
+.prompt-cards.show {
+  display: grid; /* Ditampilkan saat class show ada */
+}
+
 @keyframes bounce {
   0%, 60%, 100% {
     transform: translateY(0);
