@@ -19,7 +19,7 @@ const model = genAI.getGenerativeModel({
   ],
 });
 
-const chat = model.startChat({
+let chat = model.startChat({
   history: [],
   generationConfig: {
     maxOutputTokens: 1000,
@@ -34,26 +34,38 @@ const responses = [
   "Selamat datang! Saya adalah Glucozia AI, asisten virtual Anda. Apakah Anda membutuhkan bantuan atau informasi tentang topik diabetes?"
 ];
 
+window.onload = () => {
+  const responseText = getRandomResponse();
+  const responseBubble = addChatBubble('', 'ai', true);
+  typeResponse(responseBubble, responseText, null, 0);
+};
+
 form.onsubmit = async (ev) => {
   ev.preventDefault();
 
-  const prompt = promptTextarea.value.trim().toLowerCase();
+  const prompt = promptTextarea.value.trim();
+  if (!prompt) return;
+
   addChatBubble(prompt, 'user');
   promptTextarea.value = '';
 
   if (
-    prompt.includes('siapa yang membuat kamu') || 
-    prompt.includes('siapa yang menciptakan kamu') || 
-    prompt.includes('siapa yang mengembangkan kamu') || 
-    prompt.includes('siapa developer kamu')
+    prompt.toLowerCase().includes('siapa yang membuat kamu') || 
+    prompt.toLowerCase().includes('siapa yang menciptakan kamu') || 
+    prompt.toLowerCase().includes('siapa yang mengembangkan kamu') || 
+    prompt.toLowerCase().includes('siapa developer kamu')
   ) {
     const responseText = `Saya dibuat oleh tim GlucoWise.`;
     const responseBubble = addChatBubble('', 'ai', true);
-    typeResponse(responseBubble, responseText, null, 0,);
-  } else if (prompt.includes('siapa kamu') || prompt.includes('kamu siapa') || prompt.includes('siapa omeo')) {
+    typeResponse(responseBubble, responseText, null, 0);
+  } else if (
+    prompt.toLowerCase().includes('siapa kamu') || 
+    prompt.toLowerCase().includes('kamu siapa') || 
+    prompt.toLowerCase().includes('siapa Glucozia AI')
+  ) {
     const responseText = getRandomResponse();
     const responseBubble = addChatBubble('', 'ai', true);
-    typeResponse(responseBubble, responseText, null, 0, );
+    typeResponse(responseBubble, responseText, null, 0);
   } else {
     const loadingBubble = addChatBubble('Typing<i class="fa-solid fa-spinner fa-spin-pulse ml-2"></i>', 'ai', true);
 
@@ -70,7 +82,25 @@ form.onsubmit = async (ev) => {
       loadingBubble.innerHTML = '';
 
       const fullResponse = buffer.join('');
-      typeResponse(loadingBubble, fullResponse, md, 0,); // Kembali ke gambar awal
+      typeResponse(loadingBubble, fullResponse, md, 0);
+
+      chat = model.startChat({
+        history: [
+          ...chat.history,
+          {
+            role: "user",
+            parts: [{ text: prompt }],
+          },
+          {
+            role: "model",
+            parts: [{ text: fullResponse }],
+          },
+        ],
+        generationConfig: {
+          maxOutputTokens: 1000,
+          temperature: 0.8,
+        }
+      });
 
     } catch (e) {
       loadingBubble.innerHTML = '<hr>' + e;
