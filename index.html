@@ -9,30 +9,50 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="./style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Darumadrop+One&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Darumadrop+One&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
   <section class="flex items-center justify-center min-h-screen p-4">
     <div class="w-full max-w-2xl flex flex-col">
-      <div class="text-center mb-4">
+      <div class="text-center mb-2">
         <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-1">
           <span style="color: #1A998E;">Glucozia</span> AI
         </h1>
         <p class="text-gray-600 font-semibold mt-2">Asisten Cerdas untuk Edukasi Diabetes</p>
       </div>
-      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <!-- Card 1 -->
+        <div
+          class="bg-white rounded-lg shadow-md p-2 border border-[#1A998E] hover:shadow-lg transition-shadow cursor-pointer"
+          onclick="insertPrompt(this)">
+          <p class="text-gray-600 text-sm prompt-text">Benarkah diabetes bisa mempengaruhi pendengaran?</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div
+          class="bg-white rounded-lg shadow-md p-2 border border-[#1A998E] hover:shadow-lg transition-shadow cursor-pointer"
+          onclick="insertPrompt(this)">
+          <p class="text-gray-600 text-sm prompt-text">Apa hubungan diabetes dengan sering buang air kecil?</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div
+          class="bg-white rounded-lg shadow-md p-2 border border-[#1A998E] hover:shadow-lg transition-shadow cursor-pointer"
+          onclick="insertPrompt(this)">
+          <p class="text-gray-600 text-sm prompt-text">Mengapa luka diabetes sulit sembuh?</p>
+        </div>
+      </div>
+
       <div class="flex-1 rounded-lg p-2 overflow-hidden flex flex-col">
         <div id="chat-output" class="flex-1 overflow-y-auto space-y-3 p-2 max-h-96"></div>
       </div>
-      
+
       <div class="bg-white rounded-lg shadow-lg p-3">
         <form class="flex items-center gap-3" onsubmit="return handleSubmit(event)">
           <div class="flex-1 flex items-center">
-            <textarea 
-              id="prompt" 
-              name="prompt" 
-              placeholder="Tanyakan sesuatu..." 
+            <textarea id="prompt" name="prompt" placeholder="Tanyakan sesuatu..."
               class="w-full h-[40px] p-2 border border-[#1A998E] rounded-lg focus:ring-2 focus:ring-[#1A998E] focus:ring-opacity-50 transition-all overflow-y-auto"
               style="
                 min-height: 24px;
@@ -40,15 +60,10 @@
                 resize: none;
                 scrollbar-width: thin;
                 scrollbar-color: #1A998E #f1f1f1;
-              "
-              rows="1"
-              required
-            ></textarea>
+              " rows="1" required></textarea>
           </div>
-          <button 
-            type="submit" 
-            class="bg-[#1A998E] text-white font-bold px-4 py-2 rounded-lg flex items-center hover:bg-[#137a72] transition-colors self-center"
-          >
+          <button type="submit"
+            class="bg-[#1A998E] text-white font-bold px-4 py-2 rounded-lg flex items-center hover:bg-[#137a72] transition-colors self-center">
             Kirim
             <i class="fa-regular fa-paper-plane fa-bounce ml-1"></i>
           </button>
@@ -60,6 +75,45 @@
   <script type="module" src="./main.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
+    const diabetesPrompts = [
+      "Benarkah diabetes bisa mempengaruhi pendengaran?",
+      "Apa hubungan diabetes dengan sering buang air kecil?",
+      "Mengapa luka diabetes sulit sembuh?",
+      "Apakah diabetes bisa menyebabkan gatal-gatal?",
+      "Mengapa penderita diabetes mudah lelah?",
+      "Apa itu diabetes tipe 1.5?",
+      "Bagaimana diabetes mempengaruhi penglihatan?",
+      "Benarkah diabetes bisa mempengaruhi mood?",
+      "Apa tanda awal diabetes yang jarang diketahui?",
+      "Mengapa diabetes disebut silent killer?"
+    ];
+
+    // Function to insert prompt into textarea
+    function insertPrompt(element) {
+      const promptText = element.querySelector('.prompt-text').textContent;
+      const textarea = document.querySelector('textarea[name="prompt"]');
+      textarea.value = promptText;
+      textarea.focus();
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    }
+
+    // Function to randomize prompts on page load
+    function randomizePrompts() {
+      const cards = document.querySelectorAll('.grid > div');
+      const shuffledPrompts = [...diabetesPrompts].sort(() => 0.5 - Math.random());
+
+      cards.forEach((card, index) => {
+        card.querySelector('.prompt-text').textContent = shuffledPrompts[index];
+      });
+    }
+
+    // Initialize
+    window.addEventListener('load', randomizePrompts);
+    document.querySelectorAll('.grid > div').forEach(card => {
+      card.addEventListener('click', randomizePrompts);
+    });
+
     const textarea = document.querySelector('textarea[name="prompt"]');
     textarea.addEventListener('input', function () {
       this.style.height = 'auto';
@@ -67,4 +121,5 @@
     });
   </script>
 </body>
+
 </html>
