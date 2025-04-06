@@ -46,6 +46,11 @@ window.onload = () => {
   currentTypingResponse = typeResponse(responseBubble, responseText, null, 0);
 };
 
+function handleSubmit(ev) {
+  form.onsubmit(ev);
+  return false;
+}
+
 form.onsubmit = async (ev) => {
   ev.preventDefault();
 
@@ -54,8 +59,8 @@ form.onsubmit = async (ev) => {
 
   addChatBubble(prompt, 'user');
   promptTextarea.value = '';
+  promptTextarea.style.height = '40px';
 
-  // Change button to Stop
   setButtonToStop();
 
   if (
@@ -164,6 +169,10 @@ function getRandomResponse() {
 function typeResponse(element, text, md, index = 0, callback) {
   if (index < text.length && !stopGeneration) {
     element.innerHTML = md ? md.render(text.slice(0, index + 1)) : text.slice(0, index + 1);
+    chatOutput.scrollTo({
+      top: chatOutput.scrollHeight,
+      behavior: 'smooth'
+    });
     return setTimeout(() => {
       return typeResponse(element, text, md, index + 1, callback);
     }, 25);
@@ -196,8 +205,10 @@ function addChatBubble(text, sender, isLoading = false) {
   bubble.appendChild(bubbleInner);
   chatOutput.appendChild(bubble);
 
-  // Auto-scroll to bottom
-  chatOutput.scrollTop = chatOutput.scrollHeight;
+  chatOutput.scrollTo({
+    top: chatOutput.scrollHeight,
+    behavior: 'smooth'
+  });
 
   return bubbleInner;
 }
