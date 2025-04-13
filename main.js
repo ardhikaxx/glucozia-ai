@@ -9,11 +9,6 @@ let promptTextarea = document.querySelector('textarea[name="prompt"]');
 let chatOutput = document.querySelector('#chat-output');
 let submitButton = document.getElementById('submit-button');
 
-// State variables
-let isGenerating = false;
-let stopGeneration = false;
-let currentTypingResponse = null;
-
 const genAI = new GoogleGenerativeAI(API_KEY);
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
@@ -43,7 +38,7 @@ const responses = [
 window.onload = () => {
   const responseText = getRandomResponse();
   const responseBubble = addChatBubble('', 'ai', true);
-  currentTypingResponse = typeResponse(responseBubble, responseText, null, 0);
+  typeResponse(responseBubble, responseText, null, 0);
 };
 
 function handleSubmit(ev) {
@@ -55,13 +50,11 @@ form.onsubmit = async (ev) => {
   ev.preventDefault();
 
   const prompt = promptTextarea.value.trim();
-  if (!prompt || isGenerating) return;
+  if (!prompt) return;
 
   addChatBubble(prompt, 'user');
   promptTextarea.value = '';
   promptTextarea.style.height = '40px';
-
-  setButtonToStop();
 
   if (
     prompt.toLowerCase().includes('siapa yang membuat kamu') || 
@@ -71,9 +64,7 @@ form.onsubmit = async (ev) => {
   ) {
     const responseText = `Saya dibuat oleh tim GlucoWise.`;
     const responseBubble = addChatBubble('', 'ai', true);
-    currentTypingResponse = typeResponse(responseBubble, responseText, null, 0, () => {
-      setButtonToSubmit();
-    });
+    typeResponse(responseBubble, responseText, null, 0);
   } else if (
     prompt.toLowerCase().includes('siapa kamu') || 
     prompt.toLowerCase().includes('kamu siapa') || 
@@ -81,85 +72,48 @@ form.onsubmit = async (ev) => {
   ) {
     const responseText = getRandomResponse();
     const responseBubble = addChatBubble('', 'ai', true);
-    currentTypingResponse = typeResponse(responseBubble, responseText, null, 0, () => {
-      setButtonToSubmit();
-    });
+    typeResponse(responseBubble, responseText, null, 0);
   } else {
     const loadingBubble = addChatBubble('Typing<i class="fa-solid fa-spinner fa-spin-pulse ml-2"></i>', 'ai', true);
-    isGenerating = true;
-    stopGeneration = false;
 
     try {
       const result = await chat.sendMessageStream(prompt);
-
       let buffer = [];
       let md = new MarkdownIt();
 
       for await (let response of result.stream) {
-        if (stopGeneration) break;
         buffer.push(response.text());
       }
 
       loadingBubble.innerHTML = '';
-
-      const fullResponse = stopGeneration ? 
-        "Response dihentikan oleh pengguna." : 
-        buffer.join('');
+      const fullResponse = buffer.join('');
       
-      currentTypingResponse = typeResponse(loadingBubble, fullResponse, md, 0, () => {
-        if (!stopGeneration) {
-          chat = model.startChat({
-            history: [
-              ...chat.history,
-              {
-                role: "user",
-                parts: [{ text: prompt }],
-              },
-              {
-                role: "model",
-                parts: [{ text: fullResponse }],
-              },
-            ],
-            generationConfig: {
-              maxOutputTokens: 1000,
-              temperature: 0.8,
-            }
-          });
-        }
-        setButtonToSubmit();
+      typeResponse(loadingBubble, fullResponse, md, 0, () => {
+        chat = model.startChat({
+          history: [
+            ...chat.history,
+            {
+              role: "user",
+              parts: [{ text: prompt }],
+            },
+            {
+              role: "model",
+              parts: [{ text: fullResponse }],
+            },
+          ],
+          generationConfig: {
+            maxOutputTokens: 1000,
+            temperature: 0.8,
+          }
+        });
       });
 
     } catch (e) {
       loadingBubble.innerHTML = '<hr>' + e;
       loadingBubble.classList.remove('normal', 'text-gray-100');
-      setButtonToSubmit();
-    } finally {
-      isGenerating = false;
     }
   }
 };
-
-function setButtonToStop() {
-  submitButton.innerHTML = 'Stop <i class="fas fa-stop ml-1"></i>';
-  submitButton.classList.remove('bg-[#1A998E]', 'hover:bg-[#137a72]');
-  submitButton.classList.add('bg-red-500', 'hover:bg-red-600');
-  submitButton.onclick = function(e) {
-    e.preventDefault();
-    stopGeneration = true;
-    if (currentTypingResponse) {
-      clearTimeout(currentTypingResponse);
-    }
-    isGenerating = false;
-    setButtonToSubmit();
-  };
-}
-
-function setButtonToSubmit() {
-  submitButton.innerHTML = 'Kirim <i class="fa-regular fa-paper-plane fa-bounce ml-1"></i>';
-  submitButton.classList.remove('bg-red-500', 'hover:bg-red-600');
-  submitButton.classList.add('bg-[#1A998E]', 'hover:bg-[#137a72]');
-  submitButton.onclick = null;
-}
 
 function getRandomResponse() {
   const randomIndex = Math.floor(Math.random() * responses.length);
@@ -167,7 +121,7 @@ function getRandomResponse() {
 }
 
 function typeResponse(element, text, md, index = 0, callback) {
-  if (index < text.length && !stopGeneration) {
+  if (index < text.length) {
     element.innerHTML = md ? md.render(text.slice(0, index + 1)) : text.slice(0, index + 1);
     chatOutput.scrollTo({
       top: chatOutput.scrollHeight,
