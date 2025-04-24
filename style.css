@@ -24,57 +24,6 @@ body::before {
   z-index: -1;
 }
 
-/* Voice chat styles */
-#status-indicator {
-  transition: all 0.3s ease;
-}
-
-.listening-pulse {
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.5; }
-  100% { opacity: 1; }
-}
-
-.typing-indicator {
-  display: flex;
-  padding: 0.5rem 0;
-}
-
-.typing-indicator span {
-  height: 8px;
-  width: 8px;
-  background-color: #666;
-  border-radius: 50%;
-  display: inline-block;
-  margin: 0 2px;
-  animation: bounce 1.5s infinite ease-in-out;
-}
-
-.typing-indicator span:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.typing-indicator span:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes bounce {
-  0%, 60%, 100% { transform: translateY(0); }
-  30% { transform: translateY(-5px); }
-}
-
-/* Textarea styles */
-textarea {
-  min-height: 24px;
-  max-height: 120px;
-  resize: none;
-  overflow: hidden;
-}
-
 #chat-output {
   scrollbar-width: thin;
   scrollbar-color: #1A998E #f1f1f1;
