@@ -2,12 +2,20 @@ import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from "@google/ge
 import MarkdownIt from 'markdown-it';
 import './style.css';
 
-let API_KEY = 'AIzaSyA8pXYAck0TNfpxPg6_N7oMgOG6OYZjCiY';
+let API_KEY = 'AIzaSyAe748hL1Sojv76iHib5sQju2jygXHGhOQ';
 
 let form = document.querySelector('form');
 let promptTextarea = document.querySelector('textarea[name="prompt"]');
 let chatOutput = document.querySelector('#chat-output');
 let submitButton = document.getElementById('submit-button');
+
+promptTextarea.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+  }
+});
+
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 const model = genAI.getGenerativeModel({
@@ -146,8 +154,6 @@ form.onsubmit = async (ev) => {
               temperature: 0.8,
             }
           });
-          isGenerating = false;
-          changeButtonToSubmit();
         });
       } else {
         loadingBubble.innerHTML = md ? md.render(fullResponse) : fullResponse;
@@ -169,6 +175,7 @@ function getRandomResponse() {
   return responses[randomIndex];
 }
 
+// ✅ Versi diperbarui: tombol "Stop" otomatis kembali ke "Kirim" setelah selesai animasi mengetik
 function typeResponse(element, text, md, index = 0, callback) {
   if (index < text.length && !stopGeneration) {
     element.innerHTML = md ? md.render(text.slice(0, index + 1)) : text.slice(0, index + 1);
@@ -181,6 +188,8 @@ function typeResponse(element, text, md, index = 0, callback) {
     }, 25);
   } else {
     element.classList.remove('normal', 'text-gray-100');
+    changeButtonToSubmit(); // ⬅️ otomatis ubah ke "Kirim"
+    isGenerating = false;
     if (callback) callback();
     currentTypingInterval = null;
     return null;
